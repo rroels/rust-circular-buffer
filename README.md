@@ -46,12 +46,12 @@ buf.read().unwrap() // returns '1'
 buf.peek().unwrap() // returns '2'
 
 // peek at multiple elements (does NOT remove them) and unwrap the Result<T, E>
-// this returns a Box<[T]> that can be unboxed with .defer() 
-buf.peek_many().unwrap() // returns [2,3], after defering
+// this returns a Box<[T]> that can be unboxed with .deref() 
+buf.peek_many().unwrap() // returns [2,3], after deref()
 
 // read multiple elements (removing them from the buffer) and unwrap the Result<T, E>
-// this returns a Box<[T]>  that can be unboxed with .defer() 
-buf.read_many(2).unwrap() // returns [2,3], after defering
+// this returns a Box<[T]>  that can be unboxed with .deref() 
+buf.read_many(2).unwrap() // returns [2,3], after deref()
 
 // returns true is the buffer is empty
 buf.is_empty();
