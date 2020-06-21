@@ -1,3 +1,5 @@
+![Rust](https://github.com/rroels/rust-circular-buffer/workflows/Rust/badge.svg?branch=master)
+
 # circular_buffer
 ## Warning
 This library was created as a "hello world" project for me to learn the Rust programming language. If is not the most efficient, and it should not be used in a production environment. **The buffer is not even thread-safe!** Instead, please consider these more widely used alternatives:
