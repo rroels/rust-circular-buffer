@@ -12,7 +12,7 @@ This library was created as a "hello world" project for me to learn the Rust pro
 This library provides a basic fixed-size circular buffer implementation for the Rust programming language. Internally it works as described here:
 https://en.wikipedia.org/wiki/Circular_buffer
 
-However, this implementation does not overwrite the eldest results when it has reached its capacity. Instead it returns a [Result<T, E>](https://doc.rust-lang.org/std/result/) with an error when the buffer is full. Even though this essentially makes it act like a fixed-size queue, it is still considered a circular buffer (see Wikipedia article above). One of the benefits, for instance, is that it uses a consecutive block of memory, and none of it is ever reallocated/copied/shifted when elements are removed (see Wikipedia article above).
+However, this implementation does not overwrite the eldest results when it has reached its capacity. Instead it returns a [Result<T, E>](https://doc.rust-lang.org/std/result/) with an error when the buffer is full. Even though this essentially makes it act like a fixed-size queue, it still works like a circular buffer internally. One of the benefits, for instance, is that it uses a consecutive block of memory, and none of it is ever reallocated/copied/shifted when elements are removed (see Wikipedia article above).
 
 What does it offer:
 - FIFO queue-like fixed-size data structure

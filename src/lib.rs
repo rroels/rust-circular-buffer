@@ -4,11 +4,11 @@ use core::{mem};
 pub struct CircularBuffer<T> {
     // maximum amount of elements the buffer can hold
     capacity: usize,
-    // the buffer that holds the actual data
+    // buffer that holds the actual data
     buffer: Box<[T]>,
-    // the index of where the data starts in the buffer (the "head")
+    // index of where the data starts in the buffer (the "head")
     index_start: usize,
-    // the non-inclusive index of where the data stops in the buffer (the "tail")
+    // non-inclusive index of where the data stops in the buffer (the "tail")
     index_next_free: usize,
     // keep track of amount of elements currently stored, it also makes things easier to understand in the internal code
     // also solves the problem that if index_start == index_next_free, we don't know if it's full or empty
@@ -66,7 +66,7 @@ impl<T: Default + Clone + ToString> CircularBuffer<T> {
         }
     }
 
-    pub fn read_many(&mut self, amount: usize) -> Result<Box<[T]>, &'static str> {
+    pub fn read_many(&mut self, amount: usize) -> Result<Vec<T>, &'static str> {
 
         if amount > self.size() {
             return Err("CircularBuffer does not contain the amount of requested elements");
@@ -77,7 +77,7 @@ impl<T: Default + Clone + ToString> CircularBuffer<T> {
             vec.push(self.read()?);
         }
 
-        Ok(vec.into_boxed_slice())
+        Ok(vec)
     }
 
     pub fn peek(&self) -> Result<&T, &'static str> {
@@ -88,20 +88,20 @@ impl<T: Default + Clone + ToString> CircularBuffer<T> {
         }
     }
 
-    pub fn peek_many(&self, amount: usize) -> Result<Box<[&T]>, &'static str> {
+    pub fn peek_many(&self, amount: usize) -> Result<Vec<T>, &'static str> {
 
         if amount > self.size() {
             return Err("CircularBuffer does not contain the amount of requested elements");
         }
 
-        let mut vec: Vec<&T> = Vec::with_capacity(amount);
+        let mut vec: Vec<T> = Vec::with_capacity(amount);
         let mut index = self.index_start;
         for _ in 0..amount {
-            vec.push(&self.buffer[index]);
+            vec.push(self.buffer[index].clone());
             index = self.increase_index(index);
         }
 
-        Ok(vec.into_boxed_slice())
+        Ok(vec)
     }
 
     // returns the amount of elements currently inside the buffer
@@ -123,6 +123,7 @@ impl<T: Default + Clone + ToString> CircularBuffer<T> {
     pub fn is_full(&self) -> bool {
         self.size == self.capacity
     }
+
 
     pub fn clear(&mut self) {
         // we read the rest of the buffer, to ensure the remaining elements are dropped from memory properly
@@ -248,11 +249,10 @@ mod tests {
         assert_eq!(buf.is_empty(), false);
         assert_eq!(buf.size(), 3);
 
-        let boxed_values = peek_result.unwrap();
-        let values = boxed_values.deref();
+        let values = peek_result.unwrap();
         assert_eq!(values.len(), 2);
-        assert_eq!(*values[0], 1);
-        assert_eq!(*values[1], 2);
+        assert_eq!(values[0], 1);
+        assert_eq!(values[1], 2);
 
     }
 
@@ -381,10 +381,9 @@ mod tests {
             let data = data_vec.as_slice();
             buf.write_many(data.as_ref()).unwrap();
 
-            let peek_values_boxed = buf.peek_many(read_write_amount as usize).unwrap();
-            let peek_values = peek_values_boxed.deref();
+            let peek_values = buf.peek_many(read_write_amount as usize).unwrap();
             for i in 0..peek_values.len() {
-                assert_eq!(*peek_values[i], write_value);
+                assert_eq!(peek_values[i], write_value);
             }
 
             let read_result = buf.read_many(read_write_amount as usize).unwrap();
