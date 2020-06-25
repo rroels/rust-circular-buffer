@@ -4,6 +4,7 @@
 ## Warning
 This library was created as a "hello world" project for me to learn the Rust programming language. If is not the most efficient, and it should not be used in a production environment. **The buffer is not even thread-safe!** Instead, please consider these more widely used alternatives:
 
+- https://doc.rust-lang.org/std/collections/vec_deque/struct.VecDeque.html
 - https://docs.rs/queues/1.1.0/queues/struct.CircularBuffer.html
 - https://docs.rs/circular-queue/0.2.5/circular_queue/
 - https://docs.rs/ringbuf/0.2.1/ringbuf/
